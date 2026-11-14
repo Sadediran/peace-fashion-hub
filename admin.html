@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Site Manager — Peace Fashion Hub</title>
+<style>
+  :root { --green:#0e3b2c; --green-deep:#082418; --gold:#c9a227; --cream:#faf6ef; --ink:#1c2420; --muted:#6b7280; --line:#e5ddd0; --danger:#b3261e; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Georgia,'Times New Roman',serif; background:var(--cream); color:var(--ink); }
+  header { background:var(--green-deep); color:#fff; padding:28px 20px 22px; text-align:center; }
+  header h1 { margin:0; font-size:26px; font-weight:normal; letter-spacing:.5px; }
+  header p { margin:8px 0 0; font-size:14px; color:#d8cfae; font-family:system-ui,-apple-system,sans-serif; }
+  main { max-width:720px; margin:0 auto; padding:20px 16px 60px; font-family:system-ui,-apple-system,sans-serif; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:20px; }
+  .hidden { display:none !important; }
+  input[type=password], input[type=text], input[type=tel], input[type=search], select, textarea { width:100%; padding:12px 14px; font-size:16px; border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--ink); font-family:system-ui,-apple-system,sans-serif; }
+  textarea { resize:vertical; min-height:76px; }
+  input:focus, select:focus, textarea:focus { outline:2px solid var(--gold); outline-offset:1px; }
+  .pw-wrap { display:flex; gap:8px; align-items:center; }
+  .pw-wrap input { flex:1; min-width:0; }
+  .pw-toggle { background:#f3efe6; border:0; border-radius:999px; padding:11px 14px; font-size:13px; font-weight:600; color:var(--green-deep); cursor:pointer; flex:none; font-family:system-ui,-apple-system,sans-serif; }
+  .btn { display:inline-block; border:0; border-radius:999px; padding:12px 26px; font-size:15px; font-weight:600; cursor:pointer; font-family:system-ui,-apple-system,sans-serif; }
+  .btn-primary { background:var(--green); color:#fff; width:100%; margin-top:14px; }
+  .btn-primary:disabled { background:#9fb3a8; cursor:default; }
+  .btn-gold { background:var(--gold); color:#fff; }
+  .btn-ghost { background:#f3efe6; color:var(--green-deep); }
+  .btn-danger { background:none; color:var(--danger); font-size:13px; padding:8px 4px; font-weight:600; }
+  .error { color:var(--danger); font-size:14px; margin-top:12px; min-height:20px; }
+  /* login */
+  #login-card { max-width:420px; margin:30px auto 0; text-align:center; }
+  #login-card h2 { font-family:Georgia,serif; font-weight:normal; margin:0 0 6px; }
+  #login-card p { color:var(--muted); font-size:14px; margin:0 0 16px; }
+  #login-card input { margin-bottom:10px; }
+  #login-card label { display:block; text-align:left; font-size:13px; color:var(--muted); margin:0 0 4px; }
+  /* top bar */
+  .topbar { display:flex; flex-wrap:wrap; gap:8px; justify-content:space-between; align-items:center; margin-bottom:16px; }
+  .topbar .btn { padding:9px 16px; font-size:14px; }
+  /* tabs */
+  .tabs { display:flex; gap:8px; margin-bottom:16px; }
+  .tab-btn { flex:1; border:1px solid var(--line); background:#fff; border-radius:999px; padding:12px 10px; font-size:15px; font-weight:600; cursor:pointer; color:var(--green-deep); font-family:system-ui,-apple-system,sans-serif; }
+  .tab-btn.active { background:var(--green); color:#fff; border-color:var(--green); }
+  .intro { font-size:15px; line-height:1.6; color:#3c4a43; background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:16px; }
+  /* content sections */
+  details.section { background:#fff; border:1px solid var(--line); border-radius:14px; margin-bottom:14px; }
+  details.section summary { padding:16px 18px; cursor:pointer; font-family:Georgia,serif; font-size:19px; list-style:none; }
+  details.section summary::-webkit-details-marker { display:none; }
+  details.section summary:after { content:'+'; float:right; color:var(--gold); font-weight:700; }
+  details.section[open ] summary:after { content:'−'; }
+  .section-body { padding:0 18px 18px; }
+  .field { margin-bottom:18px; }
+  .field label { display:block; font-size:14px; font-weight:600; margin-bottom:6px; }
+  .field .help { font-size:12px; color:var(--muted); margin-top:5px; line-height:1.5; }
+  .field .changed { font-size:11px; font-weight:700; color:var(--green); background:#e4efe8; border-radius:999px; padding:2px 8px; margin-left:8px; vertical-align:middle; }
+  .field .field-row { display:flex; gap:8px; align-items:flex-start; }
+  .field .field-row .grow { flex:1; min-width:0; }
+  .btn-reset { background:none; border:0; color:var(--danger); font-size:12px; font-weight:600; cursor:pointer; padding:10px 4px; white-space:nowrap; font-family:system-ui,-apple-system,sans-serif; }
+  .img-field { display:flex; gap:12px; align-items:flex-start; }
+  .img-field img { width:110px; height:140px; object-fit:cover; border-radius:10px; background:#eee; flex:none; }
+  .img-field .img-actions { flex:1; min-width:0; }
+  .savebar { position:sticky; bottom:0; background:var(--green-deep); border-radius:14px; padding:14px 16px; display:flex; gap:10px; align-items:center; margin-top:8px; box-shadow:0 -4px 18px rgba(0,0,0,.18); }
+  .savebar .btn { margin:0; flex:none; }
+  .savebar .status { color:#e8e2cf; font-size:13px; min-height:19px; }
+  .savebar .status.ok { color:#bfe3c8; }
+  .savebar .status.err { color:#ffb3ad; }
+  /* designs */
+  #search { margin-bottom:16px; }
+  .piece { background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px; margin-bottom:14px; display:flex; gap:14px; align-items:flex-start; }
+  .piece.is-hidden { opacity:.55; }
+  .piece img.thumb { width:110px; height:140px; object-fit:cover; border-radius:10px; background:#eee; flex:none; }
+  .piece-body { flex:1; min-width:0; }
+  .piece-body .cat { font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold); font-weight:700; }
+  .piece-body input[type=text] { margin:6px 0 10px; font-family:Georgia,serif; font-size:17px; padding:9px 11px; }
+  .piece-actions { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+  .piece-actions .btn { padding:9px 16px; font-size:14px; }
+  .status { font-size:13px; min-height:19px; margin-top:8px; color:var(--muted); }
+  .status.ok { color:var(--green); }
+  .status.err { color:var(--danger); }
+  .badge { display:inline-block; font-size:11px; font-weight:700; color:var(--green); background:#e4efe8; border-radius:999px; padding:3px 9px; margin-left:8px; vertical-align:middle; }
+  .badge.hidden-badge { color:#7a5b00; background:#fdf0c2; }
+  .badge.added-badge { color:#1d4ed8; background:#dbeafe; }
+  .preview-note { font-size:12px; color:var(--muted); margin-top:6px; }
+  .add-form label { display:block; font-size:14px; font-weight:600; margin:12px 0 6px; }
+  .add-form label:first-child { margin-top:0; }
+  footer { text-align:center; color:var(--muted); font-size:13px; padding:0 16px 30px; font-family:system-ui,-apple-system,sans-serif; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Peace Fashion Hub</h1>
+  <p>Site Manager — for Peace</p>
+</header>
+<main>
+  <!-- Login gate -->
+  <div id="login-card" class="card">
+    <h2>Sign in</h2>
+    <p>Saheed gave you this sign-in. It keeps this page private.</p>
+    <label for="username">Username</label>
+    <input id="username" type="text" value="peace" autocomplete="username">
+    <label for="pw">Password</label>
+    <div class="pw-wrap"><input id="pw" type="password" placeholder="Password" autocomplete="current-password"><button type="button" class="pw-toggle" data-for="pw">Show</button></div>
+    <button id="login-btn" class="btn btn-primary">Sign in</button>
+    <div id="login-error" class="error"></div>
+  </div>
+
+  <!-- Manager -->
+  <div id="manager" class="hidden">
+    <div class="topbar">
+      <a class="btn btn-ghost" href="/" target="_blank" rel="noopener">View the site</a>
+      <span>
+        <button id="pw-toggle" class="btn btn-ghost">Sign-in details</button>
+        <button id="signout-btn" class="btn btn-ghost">Sign out</button>
+      </span>
+    </div>
+
+    <!-- Sign-in details -->
+    <div id="pw-card" class="card hidden" style="margin-bottom:16px">
+      <h2 style="font-family:Georgia,serif;font-weight:normal;margin:0 0 6px;font-size:20px">Your sign-in details</h2>
+      <p style="color:var(--muted);font-size:14px;margin:0 0 14px">Your username is <strong id="current-username">peace</strong>. You can change your username and your password here. Saheed's master password still works too, in case you ever forget yours.</p>
+      <h3 style="font-family:Georgia,serif;font-weight:normal;margin:0 0 10px;font-size:17px">Change username</h3>
+      <label style="display:block;font-size:13px;color:var(--muted);margin-bottom:4px" for="new-username">New username</label>
+      <input id="new-username" type="text" autocomplete="username" maxlength="30" style="margin-bottom:10px">
+      <label style="display:block;font-size:13px;color:var(--muted);margin-bottom:4px" for="username-current-pw">Your current password</label>
+      <div class="pw-wrap" style="margin-bottom:10px"><input id="username-current-pw" type="password" autocomplete="current-password"><button type="button" class="pw-toggle" data-for="username-current-pw">Show</button></div>
+      <button id="username-save" class="btn btn-gold" style="width:100%">Save new username</button>
+      <div id="username-status" class="status"></div>
+      <hr style="border:0;border-top:1px solid var(--line);margin:20px 0">
+      <h3 style="font-family:Georgia,serif;font-weight:normal;margin:0 0 10px;font-size:17px">Change password</h3>
+      <p style="color:var(--muted);font-size:14px;margin:0 0 12px">Your new password must be at least 8 characters.</p>
+      <label style="display:block;font-size:13px;color:var(--muted);margin-bottom:4px" for="pw-current">Current password</label>
+      <div class="pw-wrap" style="margin-bottom:10px"><input id="pw-current" type="password" autocomplete="current-password"><button type="button" class="pw-toggle" data-for="pw-current">Show</button></div>
+      <label style="display:block;font-size:13px;color:var(--muted);margin-bottom:4px" for="pw-new">New password</label>
+      <div class="pw-wrap" style="margin-bottom:10px"><input id="pw-new" type="password" autocomplete="new-password"><button type="button" class="pw-toggle" data-for="pw-new">Show</button></div>
+      <label style="display:block;font-size:13px;color:var(--muted);margin-bottom:4px" for="pw-confirm">New password again</label>
+      <div class="pw-wrap"><input id="pw-confirm" type="password" autocomplete="new-password"><button type="button" class="pw-toggle" data-for="pw-confirm">Show</button></div>
+      <button id="pw-save" class="btn btn-primary">Save new password</button>
+      <div id="pw-status" class="status"></div>
+    </div>
+
+    <div class="tabs">
+      <button id="tab-content" class="tab-btn active">Site content</button>
+      <button id="tab-designs" class="tab-btn">Designs</button>
+    </div>
+
+    <!-- Site content tab -->
+    <div id="panel-content">
+      <div class="intro">
+        Everything on the website is here — every heading, paragraph and photo, and the
+        WhatsApp number and Instagram username used by all the buttons. Edit what you like,
+        then tap <strong>Save all changes</strong> at the bottom. The website updates itself
+        within about a minute. <strong>Reset</strong> next to a field puts the original
+        wording or photo back.
+      </div>
+      <div id="content-loading">Loading the site content…</div>
+      <div id="content-sections"></div>
+      <div id="savebar" class="savebar hidden">
+        <button id="save-content" class="btn btn-gold">Save all changes</button>
+        <span id="content-status" class="status"></span>
+      </div>
+    </div>
+
+    <!-- Designs tab -->
+    <div id="panel-designs" class="hidden">
+      <div class="intro">
+        Tap a design, pick a new photo from your phone, then tap <strong>Save changes</strong>.
+        The website updates itself within about a minute. You can also change a design's name,
+        hide a design from the site, or add a brand-new design below.
+        <strong>Restore original</strong> puts the first photo and name back.
+      </div>
+      <details class="section" style="margin-bottom:16px">
+        <summary>Add a new design</summary>
+        <div class="section-body add-form">
+          <label for="add-name">Design name</label>
+          <input id="add-name" type="text" placeholder="e.g. The Ivory Lace Gown" maxlength="80">
+          <label for="add-cat">Collection</label>
+          <select id="add-cat">
+            <option value="bridal">Bridal</option>
+            <option value="occasion">Aso-Ebi &amp; Occasion</option>
+            <option value="couture">Couture &amp; Poise</option>
+          </select>
+          <label for="add-desc">Short description (optional)</label>
+          <input id="add-desc" type="text" placeholder="e.g. Ivory lace, hand beading, a long train" maxlength="200">
+          <label>Photo</label>
+          <div style="display:flex;gap:12px;align-items:center">
+            <img id="add-thumb" class="hidden" style="width:80px;height:100px;object-fit:cover;border-radius:10px;background:#eee" alt="">
+            <label class="btn btn-ghost" style="cursor:pointer">Pick a photo<input id="add-file" type="file" accept="image/*" hidden></label>
+          </div>
+          <button id="add-btn" class="btn btn-primary">Add this design</button>
+          <div id="add-status" class="status"></div>
+        </div>
+      </details>
+      <input id="search" type="search" placeholder="Search designs by name…">
+      <div id="loading">Loading your designs…</div>
+      <div id="list"></div>
+    </div>
+  </div>
+</main>
+<footer>Photos are made web-ready automatically when you save. Changes appear on the website within about a minute.</footer>
+
+<script>
+(function () {
+  var username = sessionStorage.getItem('pfh-admin-user') || 'peace';
+  var pw = sessionStorage.getItem('pfh-admin-pw') || '';
+  var pieces = [];          // [{id, name, category}] from /pieces.json (originals)
+  var added = {};           // {id: {id, name, category, image, desc}} from /api/site
+  var overrides = {};       // {id: {image, name, hidden}} from /api/site
+  var contentDoc = {};      // {contentKey: value} from /api/site
+  var schema = null;        // content-schema.json
+  var defaults = {};        // {pieceId: photo} read from the live page itself
+  var contentDefaults = {}; // {contentKey: value} read from the live page itself
+  var pending = {};         // {pieceId: {imageBase64, previewUrl}}
+  var pendingContent = {};  // {contentKey: {imageBase64, previewUrl}}
+
+  var loginCard = document.getElementById('login-card');
+  var manager = document.getElementById('manager');
+  var loginBtn = document.getElementById('login-btn');
+  var usernameInput = document.getElementById('username');
+  var pwInput = document.getElementById('pw');
+  var loginError = document.getElementById('login-error');
+  var listEl = document.getElementById('list');
+  var loadingEl = document.getElementById('loading');
+  var searchEl = document.getElementById('search');
+  var contentSectionsEl = document.getElementById('content-sections');
+  var contentLoadingEl = document.getElementById('content-loading');
+  var savebarEl = document.getElementById('savebar');
+  var saveContentBtn = document.getElementById('save-content');
+  var contentStatusEl = document.getElementById('content-status');
+  usernameInput.value = username;
+
+  function api(path, body) {
+    return fetch(path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body || {})
+    }).then(function (r) { return r.json().then(function (j) { return { status: r.status, json: j }; }); });
+  }
+  function authBody(extra) {
+    var b = { username: username, password: pw };
+    if (extra) Object.keys(extra).forEach(function (k) { b[k] = extra[k]; });
+    return b;
+  }
+  function sessionEnded() {
+    sessionStorage.removeItem('pfh-admin-pw');
+    sessionStorage.removeItem('pfh-admin-user');
+    showLogin('Your session ended — please sign in again.');
+  }
+
+  function showLogin(msg) {
+    manager.classList.add('hidden');
+    loginCard.classList.remove('hidden');
+    if (msg) loginError.textContent = msg;
+    pwInput.focus();
+  }
+  function showManager() {
+    loginCard.classList.add('hidden');
+    manager.classList.remove('hidden');
+    document.getElementById('current-username').textContent = username;
+  }
+
+  // ---- tabs ----
+  var tabContentBtn = document.getElementById('tab-content');
+  var tabDesignsBtn = document.getElementById('tab-designs');
+  var panelContent = document.getElementById('panel-content');
+  var panelDesigns = document.getElementById('panel-designs');
+  function showTab(which) {
+    var content = which === 'content';
+    tabContentBtn.classList.toggle('active', content);
+    tabDesignsBtn.classList.toggle('active', !content);
+    panelContent.classList.toggle('hidden', !content);
+    panelDesigns.classList.toggle('hidden', content);
+  }
+  tabContentBtn.addEventListener('click', function () { showTab('content'); });
+  tabDesignsBtn.addEventListener('click', function () { showTab('designs'); });
+
+  // ---- change password ----
+  var pwCard = document.getElementById('pw-card');
+  document.getElementById('pw-toggle').addEventListener('click', function () {
+    pwCard.classList.toggle('hidden');
+  });
+  document.getElementById('signout-btn').addEventListener('click', function () {
+    sessionStorage.removeItem('pfh-admin-pw');
+    sessionStorage.removeItem('pfh-admin-user');
+    pw = '';
+    showLogin('You signed out.');
+  });
+  document.getElementById('pw-save').addEventListener('click', function () {
+    var cur = document.getElementById('pw-current').value;
+    var next = document.getElementById('pw-new').value;
+    var conf = document.getElementById('pw-confirm').value;
+    var st = document.getElementById('pw-status');
+    if (!cur) { st.textContent = 'Enter your current password.'; st.className = 'status err'; return; }
+    if (next.length < 8) { st.textContent = 'The new password must be at least 8 characters.'; st.className = 'status err'; return; }
+    if (next !== conf) { st.textContent = 'The two new passwords do not match.'; st.className = 'status err'; return; }
+    if (next === cur) { st.textContent = 'The new password must be different from the current one.'; st.className = 'status err'; return; }
+    st.textContent = 'Saving…';
+    st.className = 'status';
+    api('/api/change-password', { username: username, currentPassword: cur, newPassword: next }).then(function (r) {
+      if (r.status === 401) { st.textContent = 'Your current password is not correct.'; st.className = 'status err'; return; }
+      if (!r.json.ok) { st.textContent = 'Could not change the password: ' + (r.json.error || 'try again.'); st.className = 'status err'; return; }
+      pw = next;
+      sessionStorage.setItem('pfh-admin-pw', next);
+      document.getElementById('pw-current').value = '';
+      document.getElementById('pw-new').value = '';
+      document.getElementById('pw-confirm').value = '';
+      st.textContent = 'Your password has been changed. Use the new one next time you sign in.';
+      st.className = 'status ok';
+    }).catch(function () {
+      st.textContent = 'No connection — check your internet and try again.';
+      st.className = 'status err';
+    });
+  });
+
+  // Show/hide password toggles.
+  document.querySelectorAll('.pw-toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var input = document.getElementById(btn.getAttribute('data-for'));
+      if (!input) return;
+      var show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      btn.textContent = show ? 'Hide' : 'Show';
+    });
+  });
+
+  document.getElementById('username-save').addEventListener('click', function () {
+    var next = document.getElementById('new-username').value.trim().toLowerCase();
+    var cur = document.getElementById('username-current-pw').value;
+    var st = document.getElementById('username-status');
+    if (!next) { st.textContent = 'Enter the new username first.'; st.className = 'status err'; return; }
+    if (!/^[a-z0-9._]{3,30}$/.test(next)) { st.textContent = 'Username: 3–30 characters, letters, numbers, dots and underscores only.'; st.className = 'status err'; return; }
+    if (next === username) { st.textContent = 'That is already your username.'; st.className = 'status err'; return; }
+    if (!cur) { st.textContent = 'Enter your current password, so we know it is you.'; st.className = 'status err'; return; }
+    st.textContent = 'Saving…';
+    st.className = 'status';
+    api('/api/change-username', { username: username, currentPassword: cur, newUsername: next }).then(function (r) {
+      if (r.status === 401) { st.textContent = 'Your current password is not correct.'; st.className = 'status err'; return; }
+      if (!r.json.ok) { st.textContent = 'Could not change the username: ' + (r.json.error || 'try again.'); st.className = 'status err'; return; }
+      username = r.json.username || next;
+      sessionStorage.setItem('pfh-admin-user', username);
+      usernameInput.value = username;
+      document.getElementById('current-username').textContent = username;
+      document.getElementById('new-username').value = '';
+      document.getElementById('username-current-pw').value = '';
+      st.textContent = 'Your username is now "' + username + '". Use it next time you sign in.';
+      st.className = 'status ok';
+    }).catch(function () {
+      st.textContent = 'No connection — check your internet and try again.';
+      st.className = 'status err';
+    });
+  });
+
+  // ---- helpers ----
+  function escapeHtml(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  // Shrink a phone photo to a web-ready JPEG (max 1200px on the long edge).
+  function compressImage(file) {
+    return new Promise(function (resolve, reject) {
+      var img = new Image();
+      var url = URL.createObjectURL(file);
+      img.onload = function () {
+        URL.revokeObjectURL(url);
+        var max = 1200, w = img.naturalWidth, h = img.naturalHeight;
+        var scale = Math.min(1, max / Math.max(w, h));
+        var cw = Math.round(w * scale), ch = Math.round(h * scale);
+        var c = document.createElement('canvas');
+        c.width = cw; c.height = ch;
+        c.getContext('2d').drawImage(img, 0, 0, cw, ch);
+        c.toBlob(function (blob) {
+          if (!blob) return reject(new Error('compress failed'));
+          var reader = new FileReader();
+          reader.onload = function () {
+            var dataUrl = reader.result;
+            resolve({ imageBase64: dataUrl.split(',')[1], previewUrl: dataUrl });
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        }, 'image/jpeg', 0.85);
+      };
+      img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('load failed')); };
+      img.src = url;
+    });
+  }
+
+  // ---- site content tab ----
+  function contentValue(key) {
+    return contentDoc[key] !== undefined ? contentDoc[key] : (contentDefaults[key] || '');
+  }
+  function isChanged(key) {
+    return contentDoc[key] !== undefined && contentDoc[key] !== contentDefaults[key];
+  }
+
+  function renderContent() {
+    contentSectionsEl.innerHTML = '';
+    if (!schema) return;
+    schema.sections.forEach(function (section, si) {
+      var det = document.createElement('details');
+      det.className = 'section';
+      if (si === 0) det.open = true;
+      var sum = document.createElement('summary');
+      sum.textContent = section.title;
+      det.appendChild(sum);
+      var body = document.createElement('div');
+      body.className = 'section-body';
+      section.fields.forEach(function (field) {
+        body.appendChild(renderField(field));
+      });
+      det.appendChild(body);
+      contentSectionsEl.appendChild(det);
+    });
+    savebarEl.classList.remove('hidden');
+  }
+
+  function renderField(field) {
+    var wrap = document.createElement('div');
+    wrap.className = 'field';
+    wrap.setAttribute('data-key', field.key);
+    var changed = isChanged(field.key) || !!pendingContent[field.key];
+    var label = document.createElement('label');
+    label.textContent = field.label;
+    if (changed) {
+      var b = document.createElement('span');
+      b.className = 'changed';
+      b.textContent = 'Changed';
+      label.appendChild(b);
+    }
+    wrap.appendChild(label);
+
+    var row = document.createElement('div');
+    row.className = 'field-row';
+    var grow = document.createElement('div');
+    grow.className = 'grow';
+    row.appendChild(grow);
+    if (changed) {
+      var reset = document.createElement('button');
+      reset.type = 'button';
+      reset.className = 'btn-reset';
+      reset.textContent = 'Reset';
+      reset.addEventListener('click', function () { resetContentField(field); });
+      row.appendChild(reset);
+    }
+    wrap.appendChild(row);
+
+    if (field.type === 'image') {
+      var box = document.createElement('div');
+      box.className = 'img-field';
+      var pend = pendingContent[field.key];
+      var img = document.createElement('img');
+      img.src = pend ? pend.previewUrl : contentValue(field.key);
+      img.alt = '';
+      img.loading = 'lazy';
+      box.appendChild(img);
+      var acts = document.createElement('div');
+      acts.className = 'img-actions';
+      var lbl = document.createElement('label');
+      lbl.className = 'btn btn-ghost';
+      lbl.style.cursor = 'pointer';
+      lbl.textContent = 'Change photo';
+      var fi = document.createElement('input');
+      fi.type = 'file';
+      fi.accept = 'image/*';
+      fi.hidden = true;
+      lbl.appendChild(fi);
+      acts.appendChild(lbl);
+      var note = document.createElement('div');
+      note.className = 'preview-note';
+      note.textContent = pend ? 'New photo picked — tap Save all changes below to put it on the site.' : '';
+      acts.appendChild(note);
+      fi.addEventListener('change', function () {
+        var f = fi.files && fi.files[0];
+        if (!f) return;
+        note.textContent = 'Preparing photo…';
+        compressImage(f).then(function (out) {
+          pendingContent[field.key] = out;
+          img.src = out.previewUrl;
+          note.textContent = 'New photo picked — tap Save all changes below to put it on the site.';
+          var lb = label.querySelector('.changed');
+          if (!lb) {
+            var nb = document.createElement('span');
+            nb.className = 'changed';
+            nb.textContent = 'Changed';
+            label.appendChild(nb);
+          }
+        }).catch(function () {
+          note.textContent = 'That photo could not be read. Try another one.';
+        });
+      });
+      box.appendChild(acts);
+      grow.appendChild(box);
+    } else if (field.type === 'longtext') {
+      var ta = document.createElement('textarea');
+      ta.rows = 3;
+      ta.maxLength = 5000;
+      ta.value = contentValue(field.key);
+      ta.setAttribute('data-field', field.key);
+      grow.appendChild(ta);
+    } else {
+      var inp = document.createElement('input');
+      inp.type = field.type === 'whatsapp' ? 'tel' : 'text';
+      if (field.type === 'whatsapp') inp.inputMode = 'numeric';
+      inp.maxLength = field.type === 'instagram' ? 30 : 5000;
+      inp.value = contentValue(field.key);
+      inp.setAttribute('data-field', field.key);
+      grow.appendChild(inp);
+    }
+    if (field.help) {
+      var help = document.createElement('div');
+      help.className = 'help';
+      help.textContent = field.help;
+      grow.appendChild(help);
+    }
+    return wrap;
+  }
+
+  function normaliseWhatsapp(raw) {
+    var d = String(raw || '').replace(/\D/g, '');
+    if (d.length === 11 && d.charAt(0) === '0') d = '234' + d.slice(1);
+    return d;
+  }
+  function normaliseInstagram(raw) {
+    return String(raw || '').trim().replace(/^@+/, '');
+  }
+
+  function buildContentDoc() {
+    var doc = {};
+    var error = null;
+    schema.sections.forEach(function (section) {
+      section.fields.forEach(function (field) {
+        var key = field.key;
+        if (field.type === 'image') {
+          if (pendingContent[key]) return; // uploaded separately; server sets the value
+          if (contentDoc[key] !== undefined) doc[key] = contentDoc[key];
+          return;
+        }
+        var el = contentSectionsEl.querySelector('[data-field="' + key + '"]');
+        if (!el) return;
+        var val = el.value.trim();
+        if (field.type === 'whatsapp') {
+          val = normaliseWhatsapp(val);
+          if (val && !/^\d{10,15}$/.test(val)) error = 'WhatsApp number: enter the digits with the country code, e.g. 2348024457300.';
+        }
+        if (field.type === 'instagram') {
+          val = normaliseInstagram(val);
+          if (val && !/^[A-Za-z0-9._]{1,30}$/.test(val)) error = 'Instagram username: letters, numbers, dots and underscores only.';
+        }
+        if (val && val !== (contentDefaults[key] || '')) doc[key] = val;
+      });
+    });
+    return { doc: doc, error: error };
+  }
+
+  function saveContent(deleteImages) {
+    var built = buildContentDoc();
+    if (built.error) {
+      contentStatusEl.textContent = built.error;
+      contentStatusEl.className = 'status err';
+      return;
+    }
+    var images = {};
+    var oldImages = {};
+    Object.keys(pendingContent).forEach(function (key) {
+      images[key] = pendingContent[key].imageBase64;
+      if (contentDoc[key]) oldImages[key] = contentDoc[key];
+    });
+    saveContentBtn.disabled = true;
+    contentStatusEl.textContent = 'Saving…';
+    contentStatusEl.className = 'status';
+    var body = authBody({ doc: built.doc, images: images, oldImages: oldImages });
+    if (deleteImages && deleteImages.length) body.deleteImages = deleteImages;
+    api('/api/content', body).then(function (r) {
+      saveContentBtn.disabled = false;
+      if (r.status === 401) { sessionEnded(); return; }
+      if (!r.json.ok) {
+        contentStatusEl.textContent = 'Could not save: ' + (r.json.error || 'try again.');
+        contentStatusEl.className = 'status err';
+        return;
+      }
+      contentDoc = r.json.doc || {};
+      pendingContent = {};
+      renderContent();
+      contentStatusEl.textContent = 'Saved — the website will show your changes within about a minute.';
+      contentStatusEl.className = 'status ok';
+    }).catch(function () {
+      saveContentBtn.disabled = false;
+      contentStatusEl.textContent = 'No connection — check your internet and try again.';
+      contentStatusEl.className = 'status err';
+    });
+  }
+  saveContentBtn.addEventListener('click', function () { saveContent(); });
+
+  function resetContentField(field) {
+    var key = field.key;
+    var deleteImages = [];
+    if (field.type === 'image') {
+      if (contentDoc[key]) deleteImages.push(contentDoc[key]);
+      delete contentDoc[key];
+      delete pendingContent[key];
+    } else {
+      var el = contentSectionsEl.querySelector('[data-field="' + key + '"]');
+      if (el) el.value = contentDefaults[key] || '';
+      delete contentDoc[key];
+    }
+    saveContent(deleteImages);
+  }
+
+  // ---- designs tab ----
+  function allDesigns() {
+    var list = pieces.map(function (p) { return { id: p.id, name: p.name, category: p.category, added: false }; });
+    Object.keys(added).sort().forEach(function (id) {
+      var a = added[id];
+      list.push({ id: id, name: a.name, category: a.category, added: true });
+    });
+    return list;
+  }
+  function defaultPhoto(design) {
+    return design.added ? (added[design.id] || {}).image || '' : (defaults[design.id] || '');
+  }
+  function effective(design) {
+    var o = overrides[design.id] || {};
+    return {
+      image: o.image || defaultPhoto(design),
+      name: o.name || design.name,
+      hidden: !!o.hidden,
+      overridden: !!(o.image || o.name || o.hidden)
+    };
+  }
+
+  function renderDesigns() {
+    var q = (searchEl.value || '').toLowerCase();
+    listEl.innerHTML = '';
+    allDesigns().forEach(function (design) {
+      var eff = effective(design);
+      if (q && eff.name.toLowerCase().indexOf(q) === -1 && design.category.toLowerCase().indexOf(q) === -1) return;
+      var row = document.createElement('div');
+      row.className = 'piece' + (eff.hidden ? ' is-hidden' : '');
+      row.id = 'row-' + design.id;
+      var pend = pending[design.id];
+      row.innerHTML =
+        '<img class="thumb" loading="lazy" src="' + escapeHtml(pend ? pend.previewUrl : eff.image) + '" alt="">' +
+        '<div class="piece-body">' +
+          '<span class="cat">' + escapeHtml(design.category) + '</span>' +
+          (design.added ? '<span class="badge added-badge">Added by you</span>' : '') +
+          (eff.hidden ? '<span class="badge hidden-badge">Hidden from the site</span>' : '') +
+          (eff.overridden && !eff.hidden ? '<span class="badge">Changed</span>' : '') +
+          '<input type="text" class="name-input" value="' + escapeHtml(eff.name) + '" aria-label="Design name">' +
+          '<div class="piece-actions">' +
+            '<label class="btn btn-ghost" style="cursor:pointer">Change photo<input type="file" accept="image/*" class="file-input" hidden></label>' +
+            '<button class="btn btn-primary save-btn" style="width:auto;margin:0"' + (pend ? '' : ' disabled') + '>Save changes</button>' +
+            '<button class="btn btn-ghost hide-btn">' + (eff.hidden ? 'Show on site' : 'Hide from site') + '</button>' +
+            (eff.overridden ? '<button class="btn btn-danger restore-btn">Restore original</button>' : '') +
+            (design.added ? '<button class="btn btn-danger delete-btn">Delete design</button>' : '') +
+          '</div>' +
+          '<div class="status"></div>' +
+          '<div class="preview-note">' + (pend ? 'New photo picked — tap Save changes to put it on the site.' : '') + '</div>' +
+        '</div>';
+      listEl.appendChild(row);
+
+      var nameInput = row.querySelector('.name-input');
+      var fileInput = row.querySelector('.file-input');
+      var saveBtn = row.querySelector('.save-btn');
+      var statusEl = row.querySelector('.status');
+      function markDirty() { saveBtn.disabled = false; }
+      nameInput.addEventListener('input', markDirty);
+      fileInput.addEventListener('change', function () {
+        var f = fileInput.files && fileInput.files[0];
+        if (!f) return;
+        statusEl.textContent = 'Preparing photo…';
+        statusEl.className = 'status';
+        compressImage(f).then(function (out) {
+          pending[design.id] = out;
+          var thumb = row.querySelector('img.thumb');
+          if (thumb) thumb.src = out.previewUrl;
+          var note = row.querySelector('.preview-note');
+          if (note) note.textContent = 'New photo picked — tap Save changes to put it on the site.';
+          saveBtn.disabled = false;
+          statusEl.textContent = '';
+        }).catch(function () {
+          statusEl.textContent = 'That photo could not be read. Try another one.';
+          statusEl.className = 'status err';
+        });
+      });
+      saveBtn.addEventListener('click', function () { savePiece(design, row); });
+      row.querySelector('.hide-btn').addEventListener('click', function () { toggleHide(design, row); });
+      var restoreBtn = row.querySelector('.restore-btn');
+      if (restoreBtn) restoreBtn.addEventListener('click', function () { restorePiece(design, row); });
+      var deleteBtn = row.querySelector('.delete-btn');
+      if (deleteBtn) deleteBtn.addEventListener('click', function () { deletePiece(design, row); });
+    });
+  }
+
+  function savePiece(design, row) {
+    var statusEl = row.querySelector('.status');
+    var saveBtn = row.querySelector('.save-btn');
+    var nameInput = row.querySelector('.name-input');
+    var pend = pending[design.id];
+    var cur = overrides[design.id] || {};
+    var nameVal = nameInput.value.trim();
+    if (!nameVal) { statusEl.textContent = 'The name cannot be empty.'; statusEl.className = 'status err'; return; }
+    // The server writes exactly what it is sent, so send the full desired
+    // state: the new photo (if any), the current photo to keep (for a
+    // name-only change), the desired name (null = default name), and the
+    // hidden flag (so a hidden design stays hidden after a photo change).
+    var wantName = nameVal !== design.name ? nameVal : null;
+    if (!pend && wantName === (cur.name || null)) { statusEl.textContent = 'Nothing changed for this design.'; return; }
+    var body = authBody({ pieceId: design.id, name: wantName });
+    if (pend) {
+      body.image = pend.imageBase64;
+      if (cur.image) body.oldImageUrl = cur.image;
+    } else if (cur.image) {
+      body.imageUrl = cur.image;
+    }
+    if (cur.hidden) body.hidden = true;
+    saveBtn.disabled = true;
+    statusEl.textContent = 'Saving…';
+    statusEl.className = 'status';
+    api('/api/upload', body).then(function (r) {
+      if (r.status === 401) { sessionEnded(); return; }
+      if (!r.json.ok) { statusEl.textContent = 'Could not save: ' + (r.json.error || 'try again.'); statusEl.className = 'status err'; saveBtn.disabled = false; return; }
+      var o = {};
+      if (r.json.imageUrl) o.image = r.json.imageUrl;
+      else if (body.imageUrl) o.image = body.imageUrl;
+      if (wantName) o.name = wantName;
+      if (cur.hidden) o.hidden = true;
+      if (o.image || o.name || o.hidden) overrides[design.id] = o; else delete overrides[design.id];
+      delete pending[design.id];
+      renderDesigns();
+      var s = document.querySelector('#row-' + design.id + ' .status');
+      if (s) { s.textContent = 'Saved — the website will show this within about a minute.'; s.className = 'status ok'; }
+    }).catch(function () {
+      statusEl.textContent = 'No connection — check your internet and try again.';
+      statusEl.className = 'status err';
+      saveBtn.disabled = false;
+    });
+  }
+
+  function toggleHide(design, row) {
+    var statusEl = row.querySelector('.status');
+    var cur = overrides[design.id] || {};
+    var wantHidden = !cur.hidden;
+    var body = authBody({ pieceId: design.id, hidden: wantHidden });
+    if (cur.image) body.imageUrl = cur.image;
+    if (cur.name) body.name = cur.name;
+    else body.name = null;
+    statusEl.textContent = wantHidden ? 'Hiding…' : 'Showing…';
+    statusEl.className = 'status';
+    api('/api/upload', body).then(function (r) {
+      if (r.status === 401) { sessionEnded(); return; }
+      if (!r.json.ok) { statusEl.textContent = 'Could not change this: ' + (r.json.error || 'try again.'); statusEl.className = 'status err'; return; }
+      var o = {};
+      if (cur.image) o.image = cur.image;
+      if (cur.name) o.name = cur.name;
+      if (wantHidden) o.hidden = true;
+      if (o.image || o.name || o.hidden) overrides[design.id] = o; else delete overrides[design.id];
+      renderDesigns();
+      var s = document.querySelector('#row-' + design.id + ' .status');
+      if (s) {
+        s.textContent = wantHidden
+          ? 'Hidden — the design will disappear from the site within about a minute.'
+          : 'Visible again — the design will be back on the site within about a minute.';
+        s.className = 'status ok';
+      }
+    }).catch(function () {
+      statusEl.textContent = 'No connection — check your internet and try again.';
+      statusEl.className = 'status err';
+    });
+  }
+
+  function restorePiece(design, row) {
+    var btn = row.querySelector('.restore-btn');
+    var statusEl = row.querySelector('.status');
+    // Two-tap confirmation, no pop-up dialogue: the first tap arms it.
+    if (!btn || btn.getAttribute('data-armed') !== '1') {
+      if (btn) {
+        btn.setAttribute('data-armed', '1');
+        btn.textContent = 'Tap again to confirm restore';
+      }
+      statusEl.textContent = 'Tap "Tap again to confirm restore" to put back the original photo and name.';
+      statusEl.className = 'status';
+      setTimeout(function () {
+        if (btn && btn.getAttribute('data-armed') === '1') {
+          btn.removeAttribute('data-armed');
+          btn.textContent = 'Restore original';
+          statusEl.textContent = '';
+        }
+      }, 10000);
+      return;
+    }
+    statusEl.textContent = 'Restoring…';
+    statusEl.className = 'status';
+    var rb = authBody({ pieceId: design.id });
+    var curImg = (overrides[design.id] || {}).image;
+    if (curImg) rb.imageUrl = curImg;
+    api('/api/reset', rb).then(function (r) {
+      if (r.status === 401) { sessionEnded(); return; }
+      if (!r.json.ok) { statusEl.textContent = 'Could not restore: ' + (r.json.error || 'try again.'); statusEl.className = 'status err'; return; }
+      delete overrides[design.id];
+      delete pending[design.id];
+      renderDesigns();
+      var s = document.querySelector('#row-' + design.id + ' .status');
+      if (s) { s.textContent = 'Original photo and name will be back on the site within about a minute.'; s.className = 'status ok'; }
+    }).catch(function () {
+      statusEl.textContent = 'No connection — check your internet and try again.';
+      statusEl.className = 'status err';
+    });
+  }
+
+  function deletePiece(design, row) {
+    var btn = row.querySelector('.delete-btn');
+    var statusEl = row.querySelector('.status');
+    // Two-tap confirmation, no pop-up dialogue: the first tap arms it.
+    if (!btn || btn.getAttribute('data-armed') !== '1') {
+      if (btn) {
+        btn.setAttribute('data-armed', '1');
+        btn.textContent = 'Tap again to delete for good';
+      }
+      statusEl.textContent = 'This removes the design from the site completely. Tap "Tap again to delete for good" to confirm.';
+      statusEl.className = 'status';
+      setTimeout(function () {
+        if (btn && btn.getAttribute('data-armed') === '1') {
+          btn.removeAttribute('data-armed');
+          btn.textContent = 'Delete design';
+          statusEl.textContent = '';
+        }
+      }, 10000);
+      return;
+    }
+    statusEl.textContent = 'Deleting…';
+    statusEl.className = 'status';
+    var eff = effective(design);
+    var body = authBody({ pieceId: design.id });
+    if (eff.image && eff.image.indexOf('blob.vercel-storage.com') !== -1) body.imageUrl = eff.image;
+    api('/api/delete-piece', body).then(function (r) {
+      if (r.status === 401) { sessionEnded(); return; }
+      if (!r.json.ok) { statusEl.textContent = 'Could not delete: ' + (r.json.error || 'try again.'); statusEl.className = 'status err'; return; }
+      delete added[design.id];
+      delete overrides[design.id];
+      delete pending[design.id];
+      renderDesigns();
+    }).catch(function () {
+      statusEl.textContent = 'No connection — check your internet and try again.';
+      statusEl.className = 'status err';
+    });
+  }
+
+  // ---- add a design ----
+  var addPending = null;
+  var addFile = document.getElementById('add-file');
+  var addThumb = document.getElementById('add-thumb');
+  addFile.addEventListener('change', function () {
+    var f = addFile.files && addFile.files[0];
+    if (!f) return;
+    compressImage(f).then(function (out) {
+      addPending = out;
+      addThumb.src = out.previewUrl;
+      addThumb.classList.remove('hidden');
+    }).catch(function () {
+      document.getElementById('add-status').textContent = 'That photo could not be read. Try another one.';
+      document.getElementById('add-status').className = 'status err';
+    });
+  });
+  document.getElementById('add-btn').addEventListener('click', function () {
+    var st = document.getElementById('add-status');
+    var name = document.getElementById('add-name').value.trim();
+    var cat = document.getElementById('add-cat').value;
+    var desc = document.getElementById('add-desc').value.trim();
+    if (!name) { st.textContent = 'Give the design a name.'; st.className = 'status err'; return; }
+    if (!addPending) { st.textContent = 'Pick a photo for the design.'; st.className = 'status err'; return; }
+    st.textContent = 'Adding…';
+    st.className = 'status';
+    api('/api/add-piece', authBody({ name: name, category: cat, desc: desc, image: addPending.imageBase64 })).then(function (r) {
+      if (r.status === 401) { sessionEnded(); return; }
+      if (!r.json.ok) { st.textContent = 'Could not add the design: ' + (r.json.error || 'try again.'); st.className = 'status err'; return; }
+      added[r.json.id] = { id: r.json.id, name: name, category: cat, image: r.json.imageUrl, desc: desc };
+      document.getElementById('add-name').value = '';
+      document.getElementById('add-desc').value = '';
+      addPending = null;
+      addFile.value = '';
+      addThumb.classList.add('hidden');
+      st.textContent = 'Added — the design will appear on the site within about a minute.';
+      st.className = 'status ok';
+      renderDesigns();
+    }).catch(function () {
+      st.textContent = 'No connection — check your internet and try again.';
+      st.className = 'status err';
+    });
+  });
+
+  // ---- load ----
+  // The original photos and texts come from small files made at deploy time
+  // (thumbs/*.jpg + content-defaults.json) — the admin page never downloads
+  // the 17MB homepage, so it loads in a second or two.
+  function loadData() {
+    contentLoadingEl.textContent = 'Loading the site content…';
+    loadingEl.textContent = 'Loading your designs…';
+    Promise.all([
+      fetch('/pieces.json').then(function (r) { return r.json(); }),
+      fetch('/content-schema.json').then(function (r) { return r.json(); }),
+      fetch('/content-defaults.json').then(function (r) { return r.json(); }),
+      fetch('/api/site', { cache: 'no-store' }).then(function (r) { return r.json(); })
+    ]).then(function (results) {
+      pieces = results[0];
+      schema = results[1];
+      contentDefaults = results[2] || {};
+      var site = results[3] || {};
+      overrides = site.overrides || {};
+      contentDoc = site.content || {};
+      added = site.added || {};
+      // Original design photos are small thumbnails made at deploy time.
+      pieces.forEach(function (p) { defaults[p.id] = '/thumbs/' + p.id + '.jpg'; });
+      contentLoadingEl.textContent = '';
+      loadingEl.textContent = '';
+      renderContent();
+      renderDesigns();
+    }).catch(function () {
+      contentLoadingEl.textContent = 'Could not load the site content — check your internet and refresh the page.';
+      loadingEl.textContent = 'Could not load the designs — check your internet and refresh the page.';
+    });
+  }
+
+  function tryLogin() {
+    var u = usernameInput.value.trim();
+    var val = pwInput.value;
+    if (!u) { loginError.textContent = 'Enter the username first.'; return; }
+    if (!val) { loginError.textContent = 'Enter the password first.'; return; }
+    loginBtn.disabled = true;
+    loginError.textContent = '';
+    api('/api/auth', { username: u, password: val }).then(function (r) {
+      loginBtn.disabled = false;
+      if (r.json.ok) {
+        username = u;
+        pw = val;
+        sessionStorage.setItem('pfh-admin-user', u);
+        sessionStorage.setItem('pfh-admin-pw', val);
+        showManager();
+        loadData();
+      } else {
+        loginError.textContent = 'Wrong username or password — try again.';
+      }
+    }).catch(function () {
+      loginBtn.disabled = false;
+      loginError.textContent = 'No connection — check your internet and try again.';
+    });
+  }
+
+  loginBtn.addEventListener('click', tryLogin);
+  pwInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') tryLogin(); });
+  usernameInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') tryLogin(); });
+  searchEl.addEventListener('input', renderDesigns);
+
+  // If a sign-in is already saved in this tab, try it straight away.
+  if (pw) {
+    api('/api/auth', { username: username, password: pw }).then(function (r) {
+      if (r.json.ok) { showManager(); loadData(); }
+      else { sessionStorage.removeItem('pfh-admin-pw'); sessionStorage.removeItem('pfh-admin-user'); showLogin(''); }
+    }).catch(function () { showLogin(''); });
+  } else {
+    showLogin('');
+  }
+})();
+</script>
+</body>
+</html>

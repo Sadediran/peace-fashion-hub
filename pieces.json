@@ -1,0 +1,137 @@
+[
+  {
+    "id": "piece-01",
+    "name": "The Signature Gown",
+    "category": "couture"
+  },
+  {
+    "id": "piece-02",
+    "name": "The Beloved Lace Gown",
+    "category": "bridal"
+  },
+  {
+    "id": "piece-03",
+    "name": "Cream Lace & the Gold Bow",
+    "category": "bridal"
+  },
+  {
+    "id": "piece-04",
+    "name": "The White & Gold Ensemble",
+    "category": "bridal"
+  },
+  {
+    "id": "piece-05",
+    "name": "Sunset Sequin Gown",
+    "category": "occasion"
+  },
+  {
+    "id": "piece-06",
+    "name": "Green & Ember Aso-Ebi",
+    "category": "occasion"
+  },
+  {
+    "id": "piece-07",
+    "name": "Blossom & Emerald Mermaid",
+    "category": "occasion"
+  },
+  {
+    "id": "piece-08",
+    "name": "Pink Sequin Mermaid",
+    "category": "occasion"
+  },
+  {
+    "id": "piece-09",
+    "name": "Pink & Silver, with Gele",
+    "category": "occasion"
+  },
+  {
+    "id": "piece-10",
+    "name": "The Peacock Gown",
+    "category": "occasion"
+  },
+  {
+    "id": "piece-11",
+    "name": "Scarlet Fringe",
+    "category": "occasion"
+  },
+  {
+    "id": "piece-12",
+    "name": "Violet Beaded Gown",
+    "category": "occasion"
+  },
+  {
+    "id": "piece-13",
+    "name": "The Rhinestone Pantsuit",
+    "category": "couture"
+  },
+  {
+    "id": "piece-14",
+    "name": "The Virelle Dress",
+    "category": "couture"
+  },
+  {
+    "id": "piece-15",
+    "name": "The Feathered Green Gown",
+    "category": "occasion"
+  },
+  {
+    "id": "piece-16",
+    "name": "The Purple Beaded Gown",
+    "category": "occasion"
+  },
+  {
+    "id": "piece-17",
+    "name": "Turquoise Floral Mermaid",
+    "category": "occasion"
+  },
+  {
+    "id": "piece-18",
+    "name": "Virelle in Bloom",
+    "category": "couture"
+  },
+  {
+    "id": "piece-19",
+    "name": "The Rose Dress",
+    "category": "occasion"
+  },
+  {
+    "id": "piece-20",
+    "name": "Purple & Gold Brocade",
+    "category": "occasion"
+  },
+  {
+    "id": "piece-21",
+    "name": "Pink Peplum & Purple Lace",
+    "category": "occasion"
+  },
+  {
+    "id": "piece-22",
+    "name": "Emerald Corset & Floral Maxi",
+    "category": "occasion"
+  },
+  {
+    "id": "piece-23",
+    "name": "Navy Corset & Red Ankara",
+    "category": "occasion"
+  },
+  {
+    "id": "piece-24",
+    "name": "Black Velvet Prom Gown",
+    "category": "couture"
+  },
+  {
+    "id": "piece-25",
+    "name": "Brown Satin Cowl Gown",
+    "category": "couture"
+  },
+  {
+    "id": "piece-26",
+    "name": "The Tweed Dress",
+    "category": "couture"
+  },
+  {
+    "id": "piece-27",
+    "name": "The Adire Fringe Dress",
+    "category": "couture"
+  }
+]
